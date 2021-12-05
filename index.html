@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{{wallet_web_url}}/wallet_button/wallet-button.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <script>
+        $('#payment-button-wallet').on('click', function (e) {
+            e.preventDefault();
+            let paymentDetails = {
+                vendor_key: $('#vendor_key').val(),
+                title: $('#title').val(),
+                description: $('#description').val(),
+                amount: $('#amount').val(),
+                transaction_id: $('#transaction_id').val(),
+                response_url: $('#response_url').val(),
+                cancellation_url: $('#cancellation_url').val(),
+            }
+            //request payment process
+            $.ajax({
+                type: 'POST',
+                url: `{{base_url}}/api/merchant/process-payment`,
+                async: true,
+                data: paymentDetails,
+                success: function (resp) {
+                    //your code after success.
+                    //redirect the page to the URL obtained from the response.
+                    location.href = resp.redirect_url;
+                },
+                error: function (resp) {
+                    //your code on error
+                }
+            });
+        })
+    </script>
+  <form method="post" action="">
+    <input type="hidden" id="vendor_key" name="vendor_key" value='sandbox_a4b1e278-04d7-41a5-84b1-25c31307a257'  />
+    <input type="hidden" id="title" name="title" value='NcellPay' />
+    <input type="hidden" id="description" name="description" value="icash ko test payment ho" />
+    <input type="hidden" id="amount" name="amount" value='100'>
+    <input type="hidden" id="transaction_id" name="transaction_id" />
+    <input type="hidden" id="response_url" name="response_url" />
+    <input type="hidden" id="cancellation_url" name="cancellation_url" />
+    //Place this form where you want your wallet button to be displayed
+    <button type="submit" id="payment-button-wallet" class="wallet-btn
+    wallet-btn-primary"> Pay 100 </button>
+    </form>
+</body>
+
+</html>
